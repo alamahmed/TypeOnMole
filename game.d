@@ -1,1 +1,1 @@
-obj/game.o: src/game.cpp src/Game.h /usr/local/include/raylib.h
+obj/game.o: src/game.cpp src/game.h /usr/local/include/raylib.h

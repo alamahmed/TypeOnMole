@@ -1,4 +1,4 @@
-#include "Game.h"
+#include "game.h"
 #include <string>
 #include <raylib.h>
 #include <assert.h>
@@ -33,6 +33,7 @@ void Game::Tick()
 void Game::Draw()
 {
     ClearBackground(BLACK);
+    DrawFPS(10, 20);
 }
 
 void Game::Update()
