@@ -1,11 +1,4 @@
 README.md
-game.d
-typeOnMole.d
-game
-typeOnMole
-**/obj/game.o
-**/obj/typeOnMole.o
-**/obj/game
-**/obj/typeOnMole
-**\obj\game.o
-**\obj\typeOnMole.o
+*.o
+*.d
+obj/
