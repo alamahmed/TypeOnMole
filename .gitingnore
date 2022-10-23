@@ -7,3 +7,5 @@ typeOnMole
 **/obj/typeOnMole.o
 **/obj/game
 **/obj/typeOnMole
+**\obj\game.o
+**\obj\typeOnMole.o
