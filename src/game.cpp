@@ -22,6 +22,7 @@ bool Game::GameShouldClose() const
 {
     return WindowShouldClose();
 }
+
 void Game::Tick()
 {
     BeginDrawing();
@@ -34,6 +35,7 @@ void Game::Draw()
 {
     ClearBackground(BLACK);
     DrawFPS(10, 20);
+    DrawCircle(GetMousePosition().x, GetMousePosition().y, 30 ,RED);
 }
 
 void Game::Update()

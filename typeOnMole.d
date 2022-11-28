@@ -1,1 +1,1 @@
-obj/typeOnMole.o: src/typeOnMole.cpp src/Game.h
+obj/typeOnMole.o: src/typeOnMole.cpp src/game.h
