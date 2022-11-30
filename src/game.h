@@ -11,8 +11,6 @@ class Game
     Game& operator=(const Game& other) = delete;
     bool GameShouldClose() const;
     void Tick();
-    // vector<vector<char>> readLvl(string levelName);
-    // void renderLevel(vector<vector<char> > level);
     void readLvl(string levelName);
     void renderLevel();
 
