@@ -1,41 +1,37 @@
 #include "game.h"
 #include <string>
 #include <raylib.h>
-// #include <assert.h>
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <ctime>
+#include <cstdlib>
 using std::cout;
 using std::to_string;
 using std::string;
-using std::ifstream;
 using std::vector;
-using std::copy;
-using std::back_inserter;
-
-// g++ Game.cpp -std=c++20 `pkg-config --libs --cflags raylib` -o Game
 
 Game::Game(int width, int height, int fps, string title)
 {
-    // assert(!GetWindowHandle());               // If assertion Triggers : Window is already opened
     SetTargetFPS(fps);
     InitWindow(width, height, title.c_str());
     readLvl("level.txt");
+    srand(time(0));
 }
 
 Game::~Game() noexcept
 {
-    // assert(GetWindowHandle());               // If assertion Triggers : Window is already Closed
     CloseWindow();
 }
 
-bool Game::GameShouldClose() const
+bool Game::gameShouldClose() const
 {
     return WindowShouldClose();
 }
 
-void Game::Tick()
+void Game::tick()
 {
+    calcTime();
     BeginDrawing();
     Update();
     Draw();
@@ -46,8 +42,24 @@ void Game::Draw()
 {
     ClearBackground(BLACK);
     DrawFPS(10, 20);
-    // DrawCircle(GetMousePosition().x, GetMousePosition().y, 30 ,RED);
     renderLevel();
+}
+
+void Game::calcTime()
+{
+    if(seconds == delay && frames == 0)
+        generateKey();
+    if(seconds == delay + interval)
+    {
+        seconds = 0;
+        key = 0;
+    }
+    frames++;
+    if(frames == 60)
+    {
+        seconds++;
+        frames = 0;
+    }
 }
 
 void Game::Update()
@@ -57,7 +69,7 @@ void Game::Update()
 
 void Game::readLvl(string levelName)
 {
-    ifstream level("src/" + levelName);
+    std::ifstream level("src/" + levelName);
     vector<vector<char> > lvl;
     string line;
     if(!level)
@@ -66,26 +78,47 @@ void Game::readLvl(string levelName)
     {
         vector <char> temp;
 
-        copy(line.begin(), line.end(), back_inserter(temp));
+        std::copy(line.begin(), line.end(), std::back_inserter(temp));
 
         lvl.push_back(temp);
     }
     currentLevel = lvl;
 }
 
+inline void Game::generateKey()
+{
+    key = 97 + rand() % (122 - 98);
+    interval = 4 + rand() % (8 - 2);
+}
+
 void Game::renderLevel()
 {
     // -------------------------------------------------------------------------------------
     ClearBackground(RAYWHITE);
+    if(seconds == delay)
+        holes = { 0, 121, 241, 255 };           // BLUE Mole Is Up
+    if(seconds < delay)
+        holes = { 230, 41, 55, 255 };           // RED Mole Is Down
+    if(seconds >= delay && seconds <= interval)
+    {
+        if(IsKeyPressed(key - 32))
+        {
+            seconds = 0;
+            key = 0;
+            score++;
+        }   
+    }
+        
     // ADDING BACKGROUND COLOR
     DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), RAYWHITE);
     // --------------------------------------------------------------------------------------
 
     // --------------------------------------------------------------------------------------
     // Draw Text
-    int levelNum = 1;
-    string levelName = "LEVEL " + to_string(levelNum);
-    DrawText(levelName.c_str(), 0, 0, 50, BLACK);
+    string keyToPress(1, char(key));
+    DrawText(keyToPress.c_str(), 10, 10, 50, BLACK);
+    string totalScore = "SCORE : " + to_string(score);
+    DrawText(totalScore.c_str(), 100, 20, 50, BLACK);
     // --------------------------------------------------------------------------------------
     
     // --------------------------------------------------------------------------------------
@@ -95,9 +128,9 @@ void Game::renderLevel()
         for(int j = 0; j < int(currentLevel.at(i).size()); j++)
         {
             if(currentLevel.at(i).at(j) == '1')
-                DrawCircle(i * 30 + 350, j * 30 + 200, 15, BLACK);
+                DrawCircle(i * 30 + 350, j * 30 + 200, 15, holes);
             else
-                DrawCircle(i * 30 + 350, j * 30 + 200, 15, RED);
+                DrawCircle(i * 30 + 350, j * 30 + 200, 15, BLACK);
         }
     }
 }

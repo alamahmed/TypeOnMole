@@ -17,9 +17,9 @@ int main()
     //--------------------------------------------------------------------------------------
 
     // Main game loop
-    while (!game.GameShouldClose()) // Detect window close button or ESC key
+    while (!game.gameShouldClose()) // Detect window close button or ESC key
     {
-        game.Tick();
+        game.tick();
     }
 
     //--------------------------------------------------------------------------------------

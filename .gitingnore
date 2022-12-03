@@ -1,5 +1,10 @@
-README.md
 *.o
 *.d
 obj/
-.vscode/*
+Game
+.vscode
+obj
+game.d
+typeOnMole.d
+obj/game.o
+obj/typeOnMole.o
