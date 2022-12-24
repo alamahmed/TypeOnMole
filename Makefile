@@ -5,7 +5,7 @@
 # Compiler settings - Can be customized.
 # g++ Game.cpp -std=c++20 `pkg-config --libs --cflags raylib` -o Game
 CC = g++
-CXXFLAGS = -std=c++20 `pkg-config --libs --cflags raylib` -Wall -Wextra -g
+CXXFLAGS = -std=c++20 `pkg-config --libs --cflags raylib` -g
 LDFLAGS =
 
 # Makefile settings - Can be customized.

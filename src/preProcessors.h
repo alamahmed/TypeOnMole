@@ -1,0 +1,17 @@
+#include <string>
+#include <raylib.h>
+#include <vector>
+#include <fstream>
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
+#include <set>
+using std::cout;
+using std::set;
+using std::copy;
+using std::to_string;
+using std::ifstream;
+using std::back_inserter;
+using std::vector;
+using std::string;
+using std::vector;

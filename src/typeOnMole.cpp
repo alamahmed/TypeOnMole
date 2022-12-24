@@ -1,10 +1,5 @@
 #include "game.h"
 
-
-//Command Used to Compile the Code
-// g++ typeOnMole.cpp -std=c++20 `pkg-config --libs --cflags raylib` -o typeOnMole
-
-//--------------------------------------------------------------------------------------
 // MAIN FUNCTION
 //--------------------------------------------------------------------------------------
 int main()
@@ -28,5 +23,3 @@ int main()
 
     return 0;
 }
-
-
