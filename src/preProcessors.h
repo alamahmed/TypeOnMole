@@ -6,6 +6,10 @@
 #include <ctime>
 #include <cstdlib>
 #include <set>
+#include <cmath>
+#include <map>
+
+using std::map;
 using std::cout;
 using std::set;
 using std::copy;

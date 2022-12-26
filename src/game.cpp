@@ -4,10 +4,10 @@ Game::Game(int width, int height, int fps, string title)
 {
     SetTargetFPS(fps);
     InitWindow(width, height, title.c_str());
-    currentLevel = readLvl("level1.txt");
     unlockedLevels = readLvl("unlockedLevels.txt");
 
     initalizeVariables(width, height);
+    initializeLevel("level0.txt");
     currentState = mainMenuScreen;
     loadTextures();
 }
@@ -24,10 +24,12 @@ Game::~Game() noexcept
     UnloadTexture(menuBG);
     UnloadTexture(lockedLevel);
     UnloadTexture(mainMenu);
-    UnloadTexture(levelButton);
-    UnloadTexture(survivalButton);
     UnloadTexture(gameOver);
     UnloadFont(font);
+    for(int i = 0; i < totalNoOfMoles; i++)
+    {
+        UnloadTexture(moles.at(i));
+    }
     for (int i = 0; i < totalNoOfLevels; i++)
     {
         UnloadTexture(levelsTexture.at(i));
@@ -38,14 +40,14 @@ Game::~Game() noexcept
 void Game::initalizeVariables(int width, int height)
 {
     srand(time(0));
+    delay = 2;
+    speed = 2;
     score = 0;
     life = totalLives;
     row = 0;
     column = 0;
     miliSeconds = 0;
     seconds = 0;
-    delay = 2;
-    speed = 2;
     gameWidth = width - widthDiff;
     gameHeight = height - heightDiff;
     isPaused = false;
@@ -68,15 +70,40 @@ void Game::loadTextures()
     menuBG = LoadTexture("./resources/menuBG.png");
     lockedLevel = LoadTexture("./resources/lockLevel.png");
     mainMenu = LoadTexture("./resources/mainMenu.png");
-    survivalButton = LoadTexture("./resources/survival.png");
-    levelButton = LoadTexture("./resources/level.png");
     gameOver = LoadTexture("./resources/gameOver.png");
+    
+    for(int i = 0; i < totalNoOfMoles; i++)
+    {
+        string textureToLoad = "./resources/moles/mole" + to_string(i + 1) + ".png";
+        Texture2D loadedTexture = LoadTexture(textureToLoad.c_str());
+        moles.push_back(loadedTexture);
+        moles.at(i).width = holeWidth;
+        moles.at(i).height = holeHeight;
+        // moles.push_back(loadedTexture);
+        // moles.push_back(loadedTexture);
+        // moles.at(i * 2).height = holeHeight;
+        // moles.at(i * 2).height = holeHeight;
+        // moles.at(i * 2 + 1).width = holeWidth;
+        // moles.at(i * 2 + 1).height = holeHeight;
+    }
+    
     for (int i = 0; i < totalNoOfLevels; i++)
     {
         string textureToLoad = "./resources/" + to_string(i + 1) + ".png";
         levelsTexture.push_back(LoadTexture(textureToLoad.c_str()));
         levelsTexture.at(i).width = levelIconSize;
         levelsTexture.at(i).height = levelIconSize;
+    }
+    
+    for(int i = 1; i <= 2; i++)
+    {
+        string temp;
+        if(i == 1)
+            temp = "survival";
+        else
+            temp = "level";
+        string textureToLoad = "./resources/" + temp + ".png";
+        buttons.push_back(Sprite(LoadTexture(textureToLoad.c_str()) ,{float(buttonWidthDiff), float(i * buttonHeight)}, {float(buttonWidth), float(buttonHeight)}));
     }
 
     lockedLevel.width = levelIconSize;
@@ -93,10 +120,6 @@ void Game::loadTextures()
     levelBG.height = GetScreenHeight();
     keyTexture.width = keySize;
     keyTexture.height = keySize;
-    survivalButton.width = buttonWidth;
-    survivalButton.height = buttonHeight;
-    levelButton.width = buttonWidth;
-    levelButton.height = buttonHeight;
     menu.width = GetScreenWidth();
     menu.height = GetScreenHeight();
     menuBG.width = GetScreenWidth();
@@ -274,20 +297,27 @@ void Game::getMoleToHit()
     row--;
     column = 1 + rand() % (currentLevel.at(row).size());
     column--;
+    currentAnimationFrame = 0;
 }
 
 void Game::renderMainMenu()
 {
-    DrawTexture(mainMenu, 0, 0, WHITE);
+    
+    degrees = degrees % 360;
+    double x = degrees * 3.14159/180;
+    int result = sin(x) * 10;
 
-    DrawTexture(survivalButton, buttonWidthDiff, 1 * buttonHeight, WHITE);
-    DrawTexture(levelButton, buttonWidthDiff, 2 * buttonHeight, WHITE);
+    DrawTexture(mainMenu, 0, 0, WHITE);
     for (int i = 1; i <= 2; i++)
     {
-
         int tempX = GetMousePosition().x, tempY = GetMousePosition().y;
-        if (tempX >= buttonWidthDiff && tempX <= buttonWidthDiff + buttonWidth && tempY >= i * buttonHeight && tempY <= (i + 1) * buttonHeight)
+        
+        buttons.at(i - 1).setYPosition(i * buttonHeight + result);
+        buttons.at(i - 1).draw();
+
+        if (tempX >= buttonWidthDiff && tempX <= buttonWidthDiff + buttonWidth && tempY >= i * buttonHeight && tempY <= i * buttonHeight + buttonHeight)
         {
+            degrees += 10;
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             {
                 if (i == 1)
@@ -299,6 +329,9 @@ void Game::renderMainMenu()
                     currentState = levelScreen;
             }
         }
+        else
+            buttons.at(i - 1).setYPosition(i * buttonHeight);
+            // degrees = 0;
     }
 }
 
@@ -306,6 +339,12 @@ void Game::renderLevel()
 {
     // -------------------------------------------------------------------------------------
     // ADDING BACKGROUND
+
+    if(currentAnimationFrame < totalNoOfMoles - 1)
+        currentAnimationFrame++;
+    else
+        currentAnimationFrame = totalNoOfMoles - 1;
+
     DrawTexture(levelBG, 0, 0, WHITE);
     // --------------------------------------------------------------------------------------
 
@@ -319,12 +358,13 @@ void Game::renderLevel()
     // Draw Hearts
     for (int i = 0; i < totalLives; i++)
     {
-        if (i < life)
-            DrawTexture(fullHeart, i * heartSize + 20, 20, WHITE);
-        else
-            DrawTexture(emptyHeart, i * heartSize + 20, 20, WHITE);
+        Texture2D isFullHeart = fullHeart;
+        if (i >= life)
+        {
+            isFullHeart = emptyHeart;
+        }
+        DrawTexture(isFullHeart, i * heartSize + 20, 20, WHITE);
     }
-
     // --------------------------------------------------------------------------------------
     // DRAW LEVEL
     int ySpace = heightDiff, tempHDiff = (holeWidth / 2) - (keySize / 2), tempWDiff;
@@ -342,10 +382,9 @@ void Game::renderLevel()
             else
                 tempWDiff += xSpace;
 
+            DrawTexture(hole, tempWDiff, ySpace, WHITE);
             if (currentLevel.at(i).at(j) == '1')
-                DrawTexture(mole, tempWDiff, ySpace, WHITE);
-            else if (currentLevel.at(i).at(j) == '0')
-                DrawTexture(hole, tempWDiff, ySpace, WHITE);
+                DrawTexture(moles[currentAnimationFrame], tempWDiff, ySpace, WHITE);
             DrawTexture(keyTexture, tempWDiff + tempHDiff, ySpace + holeHeight, WHITE);
             string keyToPress(1, char(key.at(i).at(j)));
             DrawText(keyToPress.c_str(), tempWDiff + tempHDiff + 13, ySpace + holeHeight + 5, keySize - 15, BLACK);

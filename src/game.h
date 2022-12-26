@@ -1,10 +1,11 @@
 #include "preProcessors.h"
+#include "Sprite.h"
 
 // Vector2 textSize = MeasureTextEx(font, totalScore.c_str(), fontSize, 0);
 
+const int totalNoOfMoles = 30;
+const int moleAnimationFrames = 24;
 const int totalNoOfLevels = 10;
-const int totalNoOfMoles = 12;
-
 const int totalLives = 5;
 const int levelIconSize = 130;
 const int heartSize = 40;
@@ -42,13 +43,14 @@ public:
 private:
     void Update();
     void Draw();
-
+    vector<Sprite> buttons;
     vector<vector<char>> currentLevel;
     vector<vector<char>> unlockedLevels;
     vector<vector<int>> key;
 
     int score, life, row, column;
-
+    int currentAnimationFrame = 0;
+    int degrees = 0;
     float miliSeconds, seconds, delay, speed;
     int gameWidth, gameHeight;
     int buttonWidthDiff, levelTextureWidthDiff, levelTextureHeightDiff;
@@ -66,6 +68,6 @@ private:
     };
     gameState currentState;
 
-    Texture2D mole, hole, fullHeart, emptyHeart, levelBG, keyTexture, menu, menuBG, lockedLevel, mainMenu, survivalButton, levelButton, gameOver;
-    vector<Texture2D> levelsTexture;
+    Texture2D mole, hole, fullHeart, emptyHeart, levelBG, keyTexture, menu, menuBG, lockedLevel, mainMenu, gameOver;
+    vector<Texture2D> levelsTexture, moles, mainMenuButton;
 };
