@@ -1,10 +1,13 @@
+#ifndef SPRITE
+#define SPRITE
 #include "preProcessors.h"
 
 class Sprite
 {
-
     public:
+    Sprite();
     Sprite(Texture2D texture,Vector2 position, Vector2 size);
+    ~Sprite();
     void setPosition(Vector2 position);
     void setXPosition(float positionX);
     void setYPosition(float positionY);
@@ -12,7 +15,7 @@ class Sprite
     void setTexture(Texture2D texture);
     Vector2 getPosition();
     Vector2 getSize();
-    Vector2 getTexture();
+    Texture2D getTexture();
     void draw();
 
     private:
@@ -20,3 +23,5 @@ class Sprite
     Texture2D texture;
 
 };
+
+#endif //SPRITE

@@ -1,4 +1,10 @@
 #include "game.h"
+#include "MainMenuScreen.h"
+
+/*
+    Screen.h k parameterized function mai error aa rha hai
+    
+*/
 
 // MAIN FUNCTION
 //--------------------------------------------------------------------------------------
@@ -10,7 +16,10 @@ int main()
     //--------------------------------------------------------------------------------------
     Game game(screenWidth, screenHeight, 60, "Type On A Mole");
     //--------------------------------------------------------------------------------------
+    
+    Screen * mainMenu = new MainMenuScreen(game);
 
+    game.changeScreen(mainMenu);
     // Main game loop
     while (!game.gameShouldClose()) // Detect window close button or ESC key
     {

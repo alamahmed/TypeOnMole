@@ -1,6 +1,10 @@
 #include "Sprite.h"
 
-
+Sprite::Sprite()
+{
+    cout << "SPRITE LOADED LOADED\n";
+    
+}
 Sprite::Sprite(Texture2D texture, Vector2 position, Vector2 size)
     :
     texture(texture),
@@ -8,6 +12,13 @@ Sprite::Sprite(Texture2D texture, Vector2 position, Vector2 size)
     size(size)
 {
     setSize(size);
+    cout << "SPRITE LOADED LOADED\n";
+
+}
+
+Sprite::~Sprite()
+{
+    UnloadTexture(texture);
 }
 
 void Sprite::setPosition(Vector2 position)
@@ -34,6 +45,11 @@ void Sprite::setSize(Vector2 size)
 void Sprite::setTexture(Texture2D texture)
 {
     this->texture = texture;
+}
+
+Texture2D Sprite::getTexture()
+{
+    return texture;
 }
 
 Vector2 Sprite::getPosition()
