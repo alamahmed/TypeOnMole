@@ -17,6 +17,7 @@ using std::to_string;
 using std::ifstream;
 using std::back_inserter;
 using std::vector;
+using std::stoi;
 using std::string;
 
 
@@ -34,6 +35,5 @@ const int heightDiff = 120;
 const int buttonWidth = 430;
 const int buttonHeight = 170;
 const int fontSize = 80;
-
 
 #endif //PREPROCESOORS

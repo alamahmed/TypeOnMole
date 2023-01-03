@@ -2,7 +2,6 @@
 
 Sprite::Sprite()
 {
-    cout << "SPRITE LOADED LOADED\n";
     
 }
 Sprite::Sprite(Texture2D texture, Vector2 position, Vector2 size)
@@ -12,8 +11,6 @@ Sprite::Sprite(Texture2D texture, Vector2 position, Vector2 size)
     size(size)
 {
     setSize(size);
-    cout << "SPRITE LOADED LOADED\n";
-
 }
 
 Sprite::~Sprite()

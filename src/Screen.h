@@ -9,7 +9,7 @@ class Screen
 {
     public:
     Screen();
-    Screen(Game &game);
+    Screen(Game *game);
     ~Screen();
     void loadTextures();
     void unloadTextures();

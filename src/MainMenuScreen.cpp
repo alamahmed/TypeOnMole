@@ -4,16 +4,13 @@ MainMenuScreen::MainMenuScreen() : Screen()
 {
     degrees = 0;
     buttonWidthDiff = (GetScreenWidth() - buttonWidth) - 50;
-    cout << "MAIN MENU SCREEN LOADED default\n";
 }
 
-MainMenuScreen::MainMenuScreen(Game &game) : Screen(game)
+MainMenuScreen::MainMenuScreen(Game *game) : Screen(game)
 {
-    cout << "MAIN MENU SCREEN LOADED\n";
     degrees = 0;
     buttonWidthDiff = (GetScreenWidth() - buttonWidth) - 50;
     loadTextures();
-
 }
 
 MainMenuScreen::~MainMenuScreen()
@@ -48,7 +45,6 @@ void MainMenuScreen::loadTextures()
             level.setPosition(Position);
             level.setSize(Size);
         }
-        
     }
 
 }   
@@ -72,10 +68,10 @@ void MainMenuScreen::update()
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             {
                 Screen *s;
-                // if (i == 1)
-                    // s = new Survival(gameState, "level0");
-                // else
-                    // s = new level(gameState);
+                if (i == 1)
+                    s = new Survival(gameState, "level0");
+                else
+                    s = new LevelScreen(gameState);
                 gameState -> changeScreen(s);
             }
         }

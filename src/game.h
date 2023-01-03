@@ -17,17 +17,16 @@ class Game
     void changeScreen(Screen *screen);
     
     void tick();
+    int getUnlockedLevels();
+    void setUnlockedLevels(int unlockedLevels);
     void renderLevelMenu();
     void loadTextures();
     void initalizeVariables();
 
     private:
     void Draw();
-    Screen * currentScreen;
-
-    vector<vector<char> > unlockedLevels;
-    int levelTextureWidthDiff, levelTextureHeightDiff;
-
+    Screen *currentScreen;
+    int unlockedLevels;
     Texture2D menu, menuBG, lockedLevel, gameOver;
     vector<Texture2D> levelsTexture, mainMenuButton;
 };

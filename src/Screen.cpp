@@ -5,15 +5,13 @@ Screen::Screen()
 
 }
 
-Screen::Screen(Game &game)
+Screen::Screen(Game *game)
 {
-    gameState = new Game;
-    *gameState = game;
+    gameState = game;
 }
 
 Screen::~Screen()
 {
-    delete gameState;
     unloadTextures();
 }
 
