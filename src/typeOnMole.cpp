@@ -1,5 +1,5 @@
 #include "game.h"
-#include "MainMenuScreen.h"
+#include "Loading.h"
 
 // MAIN FUNCTION
 //--------------------------------------------------------------------------------------
@@ -12,10 +12,10 @@ int main()
     Game * game = new Game(screenWidth, screenHeight, 60, "Type On A Mole");
     //--------------------------------------------------------------------------------------
     
-    Screen * mainMenu = new MainMenuScreen(game);
+    Screen * loading = new Loading(game);
     // Screen * s = new Survival(game, "level0");
 
-    game -> changeScreen(mainMenu);
+    game -> changeScreen(loading);
     // game -> changeScreen(s);
     // Main game loop
     while (!game->gameShouldClose()) // Detect window close button or ESC key
