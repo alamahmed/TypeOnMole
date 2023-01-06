@@ -1,10 +1,6 @@
 #include "game.h"
+#include "Loading.h"
 
-
-//Command Used to Compile the Code
-// g++ typeOnMole.cpp -std=c++20 `pkg-config --libs --cflags raylib` -o typeOnMole
-
-//--------------------------------------------------------------------------------------
 // MAIN FUNCTION
 //--------------------------------------------------------------------------------------
 int main()
@@ -13,13 +9,18 @@ int main()
 
     // Initialization
     //--------------------------------------------------------------------------------------
-    Game game(screenWidth, screenHeight, 60, "Type On A Mole");
+    Game * game = new Game(screenWidth, screenHeight, 60, "Type On A Mole");
     //--------------------------------------------------------------------------------------
+    
+    Screen * loading = new Loading(game);
+    // Screen * s = new Survival(game, "level0");
 
+    game -> changeScreen(loading);
+    // game -> changeScreen(s);
     // Main game loop
-    while (!game.GameShouldClose()) // Detect window close button or ESC key
+    while (!game->gameShouldClose()) // Detect window close button or ESC key
     {
-        game.Tick();
+        game->tick();
     }
 
     //--------------------------------------------------------------------------------------
@@ -28,5 +29,3 @@ int main()
 
     return 0;
 }
-
-

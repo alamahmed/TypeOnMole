@@ -1,104 +1,69 @@
 #include "game.h"
-#include <string>
-#include <raylib.h>
-// #include <assert.h>
-#include <vector>
-#include <fstream>
-#include <iostream>
-using std::cout;
-using std::to_string;
-using std::string;
-using std::ifstream;
-using std::vector;
-using std::copy;
-using std::back_inserter;
 
-// g++ Game.cpp -std=c++20 `pkg-config --libs --cflags raylib` -o Game
+Game::Game(){}
 
 Game::Game(int width, int height, int fps, string title)
 {
-    // assert(!GetWindowHandle());               // If assertion Triggers : Window is already opened
     SetTargetFPS(fps);
     InitWindow(width, height, title.c_str());
-    readLvl("level.txt");
+    currentScreen = NULL;
+    unlockedLevels = 1;
 }
 
 Game::~Game() noexcept
 {
-    // assert(GetWindowHandle());               // If assertion Triggers : Window is already Closed
+    delete currentScreen;
     CloseWindow();
+    UnloadTexture(gameOver);
 }
 
-bool Game::GameShouldClose() const
+void Game::setUnlockedLevels(int unlockedLevels)
+{
+    this -> unlockedLevels = unlockedLevels;
+}
+
+int Game::getUnlockedLevels()
+{
+    return unlockedLevels;
+}
+
+// void Game::loadTextures()
+// {
+//     gameOver = LoadTexture("./resources/gameOver.png");
+//     gameOver.width = GetScreenWidth();
+//     gameOver.height = GetScreenHeight();
+// }
+
+bool Game::gameShouldClose() const
 {
     return WindowShouldClose();
 }
 
-void Game::Tick()
+void Game::tick()
 {
     BeginDrawing();
-    Update();
-    Draw();
+    ClearBackground(RAYWHITE);
+    this -> currentScreen -> update();
+    this -> currentScreen -> draw();
     EndDrawing();
+}
+
+void Game::changeScreen(Screen *screen)
+{
+    if (currentScreen)
+    {
+        currentScreen -> ~Screen();
+    }
+    currentScreen = &(*screen);
+
 }
 
 void Game::Draw()
 {
-    ClearBackground(BLACK);
-    DrawFPS(10, 20);
-    // DrawCircle(GetMousePosition().x, GetMousePosition().y, 30 ,RED);
-    renderLevel();
+    // case endGame:
+    //     DrawTexture(gameOver, 0, 0, WHITE);
+    //     string totalScore = to_string(score);
+    //     // Vector2 textSize = MeasureTextEx(font, totalScore.c_str(), fontSize, 0);
+    //     DrawText(totalScore.c_str(), (GetScreenWidth() / 2) - (textSize.x / 4), (GetScreenHeight() / 2) - textSize.y * 2, fontSize, BLACK);
+    //     break;
 }
-
-void Game::Update()
-{
-    // renderLevel();
-}
-
-void Game::readLvl(string levelName)
-{
-    ifstream level("src/" + levelName);
-    vector<vector<char> > lvl;
-    string line;
-    if(!level)
-        cout << "Failed to read file " << levelName << "\n";
-    while (getline(level, line))
-    {
-        vector <char> temp;
-
-        copy(line.begin(), line.end(), back_inserter(temp));
-
-        lvl.push_back(temp);
-    }
-    currentLevel = lvl;
-}
-
-void Game::renderLevel()
-{
-    // -------------------------------------------------------------------------------------
-    ClearBackground(RAYWHITE);
-    // ADDING BACKGROUND COLOR
-    DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), RAYWHITE);
-    // --------------------------------------------------------------------------------------
-
-    // --------------------------------------------------------------------------------------
-    // Draw Text
-    int levelNum = 1;
-    string levelName = "LEVEL " + to_string(levelNum);
-    DrawText(levelName.c_str(), 0, 0, 50, BLACK);
-    // --------------------------------------------------------------------------------------
-    
-    // --------------------------------------------------------------------------------------
-    // DRAW LEVEL
-    for(int i = 0; i < int(currentLevel.size()); i++)
-    {
-        for(int j = 0; j < int(currentLevel.at(i).size()); j++)
-        {
-            if(currentLevel.at(i).at(j) == '1')
-                DrawCircle(i * 30 + 350, j * 30 + 200, 15, BLACK);
-            else
-                DrawCircle(i * 30 + 350, j * 30 + 200, 15, RED);
-        }
-    }
-}
-

@@ -1,5 +1,0 @@
-README.md
-*.o
-*.d
-obj/
-.vscode/*
