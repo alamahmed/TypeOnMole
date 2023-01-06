@@ -14,8 +14,8 @@ Loading::Loading(Game *game) : Screen(game)
 void Loading::initializeVariables()
 {
     loadTextures();
-    totalNoOfFrames = 17;
-    currentFrame = 0;
+    totalNoOfFrames = 200;
+    currentFrame = 500;
 }
 
 Loading::~Loading()
@@ -25,52 +25,44 @@ Loading::~Loading()
 
 void Loading::loadTextures()
 {
-    for(int i = 0; i < totalNoOfFrames; i++)
-    {
-        string textureToLoad = "./resources/loading/loading" + to_string(i + 1) + ".png";
-        Texture2D loadedTexture = LoadTexture(textureToLoad.c_str());
-        loadingTextures.push_back(loadedTexture);
-        loadingTextures.at(i).width = GetScreenWidth();
-        loadingTextures.at(i).height = GetScreenHeight();
-    }
+    FirstTexture = LoadTexture("./resources/loading/loading1.png");
+    FinalTexture = LoadTexture("./resources/loading/loading2.png");
+    
+    FirstTexture.width = GetScreenWidth();
+    FirstTexture.height = GetScreenHeight();
+
+    FinalTexture.width = GetScreenWidth();
+    FinalTexture.height = GetScreenHeight();
 }
 
 void Loading::unloadTextures()
 {
-    
-    for(int i = 0; i < totalNoOfFrames; i++)
-    {
-        UnloadTexture(loadingTextures.at(i));
-    }
-
+    UnloadTexture(FirstTexture);
+    UnloadTexture(FinalTexture);
 }
 
 void Loading::update()
 {
-    if(currentFrame == totalNoOfFrames - 1)
+    if(currentFrame < totalNoOfFrames)
     {
         Screen *mainMenu = new MainMenuScreen(gameState);
         gameState -> changeScreen(mainMenu);
     }
     else
     {
-        if(int(seconds) % 1 == 0 && milliSeconds == 0 && currentFrame < totalNoOfFrames)
-        {    
-            currentFrame++;
-        }
-
-        milliSeconds++;
-        if(milliSeconds == 60)
-        {
-            seconds++;
-            milliSeconds = 0;
-        }
+        if(currentFrame >= totalNoOfFrames)
+            currentFrame -= 3;
     }
 }
 
 void Loading::draw()
 {
-    DrawTexture(loadingTextures.at(0), 0, 0, WHITE);
-    DrawTexture(loadingTextures.at(currentFrame), 0, 0, WHITE);
+    Rectangle rect;
+    rect.x = 0;
+    rect.y = float(currentFrame);
+    rect.height = GetScreenHeight();
+    rect.width = GetScreenWidth();
+    DrawTexture(FirstTexture, 0, 0, WHITE);
+    DrawTextureRec(FinalTexture,rect,{0,float(currentFrame)},WHITE);
 }
 

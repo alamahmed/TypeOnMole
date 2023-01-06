@@ -19,8 +19,7 @@ class Loading : public Screen
     void draw();
     private:
     int totalNoOfFrames, currentFrame;
-    float seconds, milliSeconds;
-    vector<Texture2D> loadingTextures;
+    Texture2D FirstTexture, FinalTexture;
 
 };
 

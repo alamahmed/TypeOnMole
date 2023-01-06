@@ -15,10 +15,11 @@ void Survival::checkLevelStatus()
             limit = 60;
             speed--;
         }
-        updateSurvival = false;
     }
     if(bonus)
         life++;
+    updateSurvival = false;
+    bonus = false;
 }
 
 Survival::~Survival()
